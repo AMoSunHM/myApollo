@@ -1,0 +1,97 @@
+cmake_minimum_required(VERSION 3.5.1)
+project(common)
+
+
+#add_subdirectory(proto)
+#add_subdirectory(math)
+#add_subdirectory(status)
+#add_subdirectory(util)
+
+find_package(Protobuf REQUIRED)
+
+###############################################
+############## Create a library
+###############################################
+#set(COMMON_CONFIGS_PROTO_SRC
+    #configs/proto/error_code.proto
+    #configs/proto/geometry.proto
+    #configs/proto/header.proto
+#    configs/proto/vehicle_config.proto 
+#    )
+
+#set(COMMON_CONFIGS_SRC
+#    configs/config_gflags.cc
+#    configs/vehicle_config_helper.cc
+#)
+
+set(COMMON_MATH_SRC
+    math/aabox2d.cc
+    math/box2d.cc
+    math/cartesian_frenet_conversion.cc
+    math/line_segment2d.cc
+    math/linear_interpolation.cc
+    math/math_utils.cc
+    math/path_matcher.cc
+    math/polygon2d.cc
+    math/vec2d.cc
+)
+
+set(COMMON_PROTO_SRC
+    proto/direction.proto
+    proto/drive_event.proto
+    proto/drive_state.proto
+    proto/error_code.proto
+    proto/geometry.proto
+    proto/header.proto
+    proto/pnc_point.proto
+    proto/pose.proto
+    proto/vehicle_signal.proto
+#    ${COMMON_CONFIGS_PROTO_SRC}
+    )
+
+set(COMMON_UTIL_SRC
+    util/string_util.cc
+    util/util.cc
+    )
+
+
+# Generate the .h and .cxx files
+PROTOBUF_GENERATE_CPP(PROTO_SRCS PROTO_HDRS ${COMMON_PROTO_SRC})
+
+set(COMMON_SRC
+    ${COMMON_CONFIGS_SRC}
+    ${COMMON_MATH_SRC}
+
+    #${PROTO_SRCS}
+
+    ${COMMON_UTIL_SRC}
+
+    )
+
+# Add a library with the above sources
+
+
+
+add_library(${PROJECT_NAME} 
+            ${COMMON_SRC}
+            ${PROTO_HDRS}
+            ${PROTO_SRCS}
+            )
+
+target_include_directories(${PROJECT_NAME}
+    PUBLIC
+
+
+    ${PROTOBUF_INCLUDE_DIRS}
+    ${CMAKE_CURRENT_BINARY_DIR}
+
+    ${PROJECT_SOURCE_DIR}
+)
+
+target_link_libraries(${PROJECT_NAME}
+    #common::proto
+    glags
+    Eigen
+
+    ${PROTOBUF_LIBRARIES}
+)

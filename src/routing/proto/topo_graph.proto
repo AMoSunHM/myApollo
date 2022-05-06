@@ -1,0 +1,56 @@
+syntax = "proto2";
+
+package apollo.routing;
+
+import "modules/map/proto/map_geometry.proto";
+
+message CurvePoint {
+  optional double s = 1;
+}
+
+message CurveRange {
+  optional CurvePoint start = 1;
+  optional CurvePoint end = 2;
+}
+
+message Node {
+  //车道唯一的id
+  optional string lane_id = 1;
+  optional double length = 2;
+  //左边出口
+  repeated CurveRange left_out = 3;
+  //右边出口
+  repeated CurveRange right_out = 4;
+  //路段代价（限速或者拐弯的路段会增加成本，代价系数在routing_config.pb.txt中定义）
+  optional double cost = 5;
+  //中心线（虚拟的，用于生成参考线）
+  optional apollo.hdmap.Curve central_curve = 6;
+  //是否可见
+  optional bool is_virtual = 7 [default = true];
+  //车道所属的道路id
+  optional string road_id = 8;
+}
+
+message Edge {
+  //前向、向左、向右
+  enum DirectionType {
+    FORWARD = 0;
+    LEFT = 1;
+    RIGHT = 2;
+  }
+  //起始车道id
+  optional string from_lane_id = 1;
+  //到达车道id
+  optional string to_lane_id = 2;
+  //切换代价
+  optional double cost = 3;
+  //方向
+  optional DirectionType direction_type = 4;
+}
+
+message Graph {
+  optional string hdmap_version = 1;
+  optional string hdmap_district = 2;
+  repeated Node node = 3;
+  repeated Edge edge = 4;
+}

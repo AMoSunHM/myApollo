@@ -1,0 +1,80 @@
+cmake_minimum_required(VERSION 3.5.1)
+project(common)
+
+
+#add_subdirectory(proto)
+#add_subdirectory(math)
+#add_subdirectory(status)
+#add_subdirectory(util)
+
+
+###############################################
+############## Create a library
+###############################################
+set(COMMON_CONFIGS_PROTO_SRC
+    configs/proto/protocpp/error_code.pb.cc
+    configs/proto/protocpp/geometry.pb.cc
+    configs/proto/protocpp/header.pb.cc
+    configs/proto/protocpp/vehicle_config.pb.cc 
+    )
+
+set(COMMON_CONFIGS_SRC
+    configs/config_gflags.cc
+    configs/vehicle_config_helper.cc
+    ${COMMON_CONFIGS_PROTO_SRC})
+
+set(COMMON_MATH_SRC
+    math/aabox2d.cc
+    math/box2d.cc
+    math/cartesian_frenet_conversion.cc
+    math/line_segment2d.cc
+    math/linear_interpolation.cc
+    math/math_utils.cc
+    math/path_matcher.cc
+    math/polygon2d.cc
+    math/vec2d.cc
+)
+
+set(COMMON_PROTO_SRC
+    proto/protocpp/direction.pb.cc
+    proto/protocpp/drive_event.pb.cc
+    proto/protocpp/drive_state.pb.cc
+    proto/protocpp/error_code.pb.cc
+    proto/protocpp/geometry.pb.cc
+    proto/protocpp/header.pb.cc
+    proto/protocpp/pnc_point.pb.cc
+    proto/protocpp/pose.pb.cc
+    proto/protocpp/vehicle_signal.pb.cc
+    
+    )
+
+set(COMMON_UTIL_SRC
+    util/string_util.cc
+    util/util.cc
+    )
+
+
+
+set(COMMON_SRC
+    ${COMMON_CONFIGS_SRC}
+    ${COMMON_MATH_SRC}
+    ${COMMON_PROTO_SRC}
+    ${COMMON_UTIL_SRC}
+    )
+
+# Add a library with the above sources
+
+
+
+add_library(${PROJECT_NAME} ${COMMON_SRC})
+
+target_include_directories(${PROJECT_NAME}
+    PUBLIC
+    ${PROJECT_SOURCE_DIR}
+)
+
+target_link_libraries(${PROJECT_NAME}
+    #common::proto
+    glags
+    Eigen
+)

@@ -1,0 +1,40 @@
+cmake_minimum_required(VERSION 3.5)
+
+# Set the project name
+project (map_proto)
+
+# find the protobuf compiler and libraries
+find_package(Protobuf REQUIRED)
+
+
+file(GLOB protobuf_files
+        modules/common/proto/*.proto
+        modules/map/proto/*.proto
+        )
+
+SET(PROTO_META_BASE_DIR ${CMAKE_CURRENT_BINARY_DIR})
+LIST(APPEND PROTO_FLAGS -I${CMAKE_CURRENT_SOURCE_DIR})
+
+
+
+FOREACH(FIL ${protobuf_files})
+
+    GET_FILENAME_COMPONENT(FIL_WE ${FIL} NAME_WE)
+
+    string(REGEX REPLACE ".+/(.+)\\..*" "\\1" FILE_NAME ${FIL})
+    string(REGEX REPLACE "(.+)\\${FILE_NAME}.*" "\\1" FILE_PATH ${FIL})
+
+    string(REGEX MATCH "(/modules/common/proto.*|/modules/map/proto.*)" OUT_PATH ${FILE_PATH})
+
+    set(PROTO_SRCS "${CMAKE_CURRENT_BINARY_DIR}${OUT_PATH}${FIL_WE}.pb.cc")
+    set(PROTO_HDRS "${CMAKE_CURRENT_BINARY_DIR}${OUT_PATH}${FIL_WE}.pb.h")
+
+    EXECUTE_PROCESS(
+            COMMAND ${PROTOBUF_PROTOC_EXECUTABLE} ${PROTO_FLAGS} --cpp_out=${PROTO_META_BASE_DIR} ${FIL}
+    )
+    message("Copying " ${PROTO_SRCS} " to " ${FILE_PATH})
+
+    file(COPY ${PROTO_SRCS} DESTINATION ${FILE_PATH})
+    file(COPY ${PROTO_HDRS} DESTINATION ${FILE_PATH})
+
+ENDFOREACH()

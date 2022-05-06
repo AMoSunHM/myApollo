@@ -30,8 +30,8 @@ void TopoGraph::Clear() {
 
 bool TopoGraph::LoadNodes(const Graph& graph) {
   if (graph.node().empty()) {
-    //AERROR << "No nodes found in topology graph.";
-    std::cout<< "No nodes found in topology graph."<<std::endl;
+    AERROR << "No nodes found in topology graph.";
+    //std::cout<< "No nodes found in topology graph."<<std::endl;
     return false;
   }
   for (const auto& node : graph.node()) {
@@ -48,8 +48,8 @@ bool TopoGraph::LoadNodes(const Graph& graph) {
 // Need to execute load_nodes() firstly
 bool TopoGraph::LoadEdges(const Graph& graph) {
   if (graph.edge().empty()) {
-    //AINFO << "0 edges found in topology graph, but it's fine";
-    std::cout<< "0 edges found in topology graph, but it's fine"<<std::endl;
+    AINFO << "0 edges found in topology graph, but it's fine";
+    //std::cout<< "0 edges found in topology graph, but it's fine"<<std::endl;
     return true;
   }
   for (const auto& edge : graph.edge()) {
@@ -75,16 +75,16 @@ bool TopoGraph::LoadGraph(const Graph& graph) {
   map_version_ = graph.hdmap_version();
   map_district_ = graph.hdmap_district();
   if (!LoadNodes(graph)) {
-    //AERROR << "Failed to load nodes from topology graph.";
-    std::cout<< "Failed to load nodes from topology graph."<<std::endl;
+    AERROR << "Failed to load nodes from topology graph.";
+    //std::cout<< "Failed to load nodes from topology graph."<<std::endl;
     return false;
   }
   if (!LoadEdges(graph)) {
-    //AERROR << "Failed to load edges from topology graph.";
+    AERROR << "Failed to load edges from topology graph.";
     return false;
   }
-  //AINFO << "Load Topo data successful.";
-  std::cout<< "Load Topo data successful."<<std::endl;
+  AINFO << "Load Topo data successful.";
+  //std::cout<< "Load Topo data successful."<<std::endl;
   return true;
 }
 

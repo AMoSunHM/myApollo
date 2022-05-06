@@ -26,7 +26,7 @@
 #include "cyber/common/log.h"
 #include "modules/routing/graph/topo_node.h"
 */
-//#include "../../../cyber/common/log.h"
+#include "../../../cyber/common/log.h"
 #include "../../../src/routing/graph/topo_node.h"
 #include <iostream>
 

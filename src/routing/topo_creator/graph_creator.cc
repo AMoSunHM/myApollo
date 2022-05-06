@@ -81,21 +81,25 @@ bool GraphCreator::Create() {
   if (absl::EndsWith(base_map_file_path_, ".xml")) {
     if (!hdmap::adapter::OpendriveAdapter::LoadData(base_map_file_path_,
                                                     &pbmap_)) {
-      //AERROR << "Failed to load base map file from " << base_map_file_path_;
+      AERROR << "Failed to load base map file from " << base_map_file_path_;
+      /*
       std::cout << "Failed to load base map file from 1" 
-                << base_map_file_path_ <<std::endl;      
+                << base_map_file_path_ <<std::endl;    
+      */
       return false;
     }
   } else {
     if (!cyber::common::GetProtoFromFile(base_map_file_path_, &pbmap_)) {
-      //AERROR << "Failed to load base map file from " << base_map_file_path_;
+      AERROR << "Failed to load base map file from " << base_map_file_path_;
+/*      
       std::cout << "Failed to load base map file from 2" 
                 << base_map_file_path_ <<std::endl;
+*/                
       return false;
     }
   }
 
-  //AINFO << "Number of lanes: " << pbmap_.lane_size();
+  AINFO << "Number of lanes: " << pbmap_.lane_size();
 
   //将导入的地图文件保存在graph_中
   //graph_为最后保存的图，在topo_graph.proto中定义
@@ -128,17 +132,17 @@ bool GraphCreator::Create() {
     const auto& lane_id = lane.id().id();
     //跳过不是城市道路(CITY_DRIVING)的车道
     if (forbidden_lane_id_set_.find(lane_id) != forbidden_lane_id_set_.end()) {
-      //ADEBUG << "Ignored lane id: " << lane_id
-      //       << " because its type is NOT CITY_DRIVING.";
+      ADEBUG << "Ignored lane id: " << lane_id
+             << " because its type is NOT CITY_DRIVING.";
       continue;
     }
     //跳过掉头曲率太小的车道
     if (lane.turn() == hdmap::Lane::U_TURN &&
         !IsValidUTurn(lane, min_turn_radius)) {
-      //ADEBUG << "The u-turn lane radius is too small for the vehicle to turn";
+      ADEBUG << "The u-turn lane radius is too small for the vehicle to turn";
       continue;
     }
-    //AINFO << "Current lane id: " << lane_id;
+//    AINFO << "Current lane id: " << lane_id;
 
     //存储图中节点index和lane_id的关系，因为跳过node可以找到lane
     //而通过lane_id需要遍历节点才能找到节点index
@@ -152,7 +156,7 @@ bool GraphCreator::Create() {
       node_creator::GetPbNode(lane, iter->second, routing_conf_,
                               graph_.add_node());
     } else {
-      //AWARN << "Failed to find road id of lane " << lane_id;
+      AWARN << "Failed to find road id of lane " << lane_id;
       std::cout<< "Failed to find road id of lane " << lane_id <<std::endl;
       node_creator::GetPbNode(lane, "", routing_conf_, graph_.add_node());
     }
@@ -163,8 +167,8 @@ bool GraphCreator::Create() {
     const auto& lane_id = lane.id().id();
     //跳过不是城市道路(CITY_DRIVING)的车道
     if (forbidden_lane_id_set_.find(lane_id) != forbidden_lane_id_set_.end()) {
-      //ADEBUG << "Ignored lane id: " << lane_id
-      //       << " because its type is NOT CITY_DRIVING.";
+      ADEBUG << "Ignored lane id: " << lane_id
+             << " because its type is NOT CITY_DRIVING.";
       continue;
     }
     //这里就是通过上面所说的通过lane_id找到node的index，得到节点
@@ -191,27 +195,27 @@ bool GraphCreator::Create() {
 
   if (!absl::EndsWith(dump_topo_file_path_, ".bin") &&
       !absl::EndsWith(dump_topo_file_path_, ".txt")) {
-    //AERROR << "Failed to dump topo data into file, incorrect file type "
-    //       << dump_topo_file_path_;
+    AERROR << "Failed to dump topo data into file, incorrect file type "
+           << dump_topo_file_path_;
     return false;
   }
   auto type_pos = dump_topo_file_path_.find_last_of(".") + 1;
   std::string bin_file = dump_topo_file_path_.replace(type_pos, 3, "bin");
   std::string txt_file = dump_topo_file_path_.replace(type_pos, 3, "txt");
   if (!cyber::common::SetProtoToASCIIFile(graph_, txt_file)) {
-    //AERROR << "Failed to dump topo data into file " << txt_file;
-    std::cout << "Failed to dump topo data into file " << txt_file;    
+    AERROR << "Failed to dump topo data into file " << txt_file;
+    //std::cout << "Failed to dump topo data into file " << txt_file;    
     return false;
   }
-  //AINFO << "Txt file is dumped successfully. Path: " << txt_file;
-  std::cout << "Txt file is dumped successfully. Path: " << txt_file<<std::endl;  
+  AINFO << "Txt file is dumped successfully. Path: " << txt_file;
+  //std::cout << "Txt file is dumped successfully. Path: " << txt_file<<std::endl;  
   if (!cyber::common::SetProtoToBinaryFile(graph_, bin_file)) {
-    //AERROR << "Failed to dump topo data into file " << bin_file;
-    std::cout << "Failed to dump topo data into file " << bin_file;    
+    AERROR << "Failed to dump topo data into file " << bin_file;
+    //std::cout << "Failed to dump topo data into file " << bin_file;    
     return false;
   }
-  //AINFO << "Bin file is dumped successfully. Path: " << bin_file;
-  std::cout << "Bin file is dumped successfully. Path: " << bin_file<<std::endl;  
+  AINFO << "Bin file is dumped successfully. Path: " << bin_file;
+  //std::cout << "Bin file is dumped successfully. Path: " << bin_file<<std::endl;  
   return true;
 }
 
@@ -226,7 +230,7 @@ void GraphCreator::AddEdge(const Node& from_node,
   for (const auto& to_id : to_node_vec) {
     if (forbidden_lane_id_set_.find(to_id.id()) !=
         forbidden_lane_id_set_.end()) {
-      //ADEBUG << "Ignored lane [id = " << to_id.id();
+      ADEBUG << "Ignored lane [id = " << to_id.id();
       continue;
     }
     const std::string edge_id = GetEdgeID(from_node.lane_id(), to_id.id());

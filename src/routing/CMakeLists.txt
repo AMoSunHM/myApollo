@@ -34,7 +34,7 @@ find_package(Eigen3 REQUIRED)
 find_package(gflags REQUIRED)
 
 find_package(absl REQUIRED)
-
+find_package (glog 0.6.0 REQUIRED)
 
 if(Eigen3_FOUND)
     message("eigen3 found")
@@ -87,6 +87,7 @@ include_directories(
 
 set(CYBER_COMMON_SRC
     ../../cyber/common/file.cc
+    ../../cyber/common/log.h
 )
 
 set(CYBER_SRC
@@ -349,6 +350,8 @@ target_link_libraries(topo_creator
 #    gflags::gflags
 #    /usr/local/lib/libgflags.a
 
+    glog::glog
+
     #Eigen3
 )
 
@@ -368,7 +371,7 @@ target_include_directories(routing
     ${PROTOBUF_INCLUDE_DIRS}
     ${CMAKE_CURRENT_BINARY_DIR}
 
-    #../cyber
+    ../cyber
 )
 
 target_link_libraries(routing
@@ -388,7 +391,7 @@ target_link_libraries(routing
     #gflags
     #gflags::gflags
     #/usr/local/lib/libgflags.a
-
+    glog::glog
     #Eigen3
     #ROS
     ${catkin_LIBRARIES}

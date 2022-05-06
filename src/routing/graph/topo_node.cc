@@ -31,7 +31,7 @@
 #include <cmath>
 #include <utility>
 
-//#include "cyber/common/log.h"
+#include "../../../cyber/common/log.h"
 #include "../../../src/common/util/map_util.h"
 #include "../../../src/routing/graph/range_utils.h"
 
@@ -107,16 +107,18 @@ bool TopoNode::IsOutRangeEnough(const std::vector<NodeSRange>& range_vec,
 
 TopoNode::TopoNode(const Node& node)
     : pb_node_(node), start_s_(0.0), end_s_(pb_node_.length()) {
-/*
+
   ACHECK(pb_node_.length() > kLenghtEpsilon)
       << "Node length is invalid in pb: " << pb_node_.DebugString();
-*/
+
   //**********************************
+  /*
   if(pb_node_.length() > kLenghtEpsilon)
   {
       std::cout<< "Node length is invalid in pb: " //<<std::endl;
               << pb_node_.DebugString()<<std::endl;
   }
+  */
   Init();
   origin_node_ = this;
 }
@@ -133,9 +135,8 @@ TopoNode::~TopoNode() {}
 
 void TopoNode::Init() {
   if (!FindAnchorPoint()) {
-//    AWARN << "Be attention!!! Find anchor point failed for lane: " << LaneId();
-    std::cout<<"AWARN:"<< "Be attention!!! Find anchor point failed for lane: "
-           << LaneId()<<std::endl;}
+    AWARN << "Be attention!!! Find anchor point failed for lane: " << LaneId();
+}
   ConvertOutRange(pb_node_.left_out(), start_s_, end_s_,
                   &left_out_sorted_range_, &left_prefer_range_index_);
 

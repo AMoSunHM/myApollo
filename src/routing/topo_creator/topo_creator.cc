@@ -45,8 +45,8 @@ int main(int argc, char **argv) {
     return 0;
   };
 
-  //AINFO << "Conf file: " << FLAGS_routing_conf_file << " is loaded.";
-  std::cout << "Conf file: " << FLAGS_routing_conf_file << " is loaded." <<std::endl;
+  AINFO << "Conf file: " << FLAGS_routing_conf_file << " is loaded.";
+  //std::cout << "Conf file: " << FLAGS_routing_conf_file << " is loaded." <<std::endl;
   std::cout << " base_speed" <<routing_conf.base_speed() <<std::endl;
 
   const auto base_map = apollo::hdmap::BaseMapFile();
@@ -59,17 +59,20 @@ int main(int argc, char **argv) {
   const auto routing_map = "/home/casicapollo/Documents/myAll/my_3_3_1/src/map/data/routing_map.txt";
 */
   apollo::routing::GraphCreator creator(base_map, routing_map, routing_conf);
-  //ACHECK(creator.Create()) << "Create routing topo failed!";
+  ACHECK(creator.Create()) << "Create routing topo failed!";
+/*
   if(!creator.Create()) 
   {
     std::cout<<"Create routing topo failed!"<<std::endl;
     return 0;
   }
-/*
+*/
+
   AINFO << "Create routing topo successfully from " << base_map << " to "
         << routing_map;
-*/
+/*
   std::cout << "*****Create routing topo successfully from " << base_map << " to "
         << routing_map<<std::endl;  
+*/
   return 0;
 }

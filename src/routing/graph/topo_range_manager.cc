@@ -28,7 +28,7 @@
 #include <algorithm>
 #include <utility>
 
-//#include "cyber/common/log.h"
+#include "../../../cyber/common/log.h"
 
 namespace apollo {
 namespace routing {
@@ -77,14 +77,14 @@ const std::vector<NodeSRange>* TopoRangeManager::Find(
 void TopoRangeManager::PrintDebugInfo() const {
   for (const auto& map : range_map_) {
     for (const auto& range : map.second) {
-/*
+
       AINFO << "black lane id: " << map.first->LaneId()
             << ", start s: " << range.StartS() << ", end s: " << range.EndS();
-*/
+/*
       std::cout<<"AINFO "<< "black lane id: " << map.first->LaneId()
             << ", start s: " << range.StartS() 
             << ", end s: " << range.EndS() <<std::endl;
-    }
+*/    }
   }
 }
 

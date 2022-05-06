@@ -28,7 +28,7 @@
 #include "glog/raw_logging.h"
 
 //#include "cyber/binary.h"
-//#include "../../cyber/binary.h"
+#include "../../cyber/binary.h"
 
 #define LEFT_BRACKET "["
 #define RIGHT_BRACKET "]"

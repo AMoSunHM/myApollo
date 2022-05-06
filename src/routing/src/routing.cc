@@ -46,10 +46,12 @@ apollo::common::Status Routing::Init() {
   const auto routing_map_file = 
         "/home/casicapollo/Documents/myAll/my_3_3_1/src/map/data/routing_map.txt";
 */
-  //AINFO << "Use routing topology graph path: " << routing_map_file;
+
+  AINFO << "Use routing topology graph path: " << routing_map_file;
+  /*
   std::cout<< "Use routing topology graph path: " 
             << routing_map_file<<std::endl;
-
+  */
   navigator_ptr_.reset(new Navigator(routing_map_file));
 
   //读取高精地图，用来查找routing_request请求的点距离最近的lane
@@ -57,22 +59,24 @@ apollo::common::Status Routing::Init() {
   //比如在小区里打车，需要找到最近的乘车点，就是找到最近的路
   hdmap_ = apollo::hdmap::HDMapUtil::BaseMapPtr();
 
-  //ACHECK(hdmap_) << "Failed to load map file:" << apollo::hdmap::BaseMapFile();
+  ACHECK(hdmap_) << "Failed to load map file:" << apollo::hdmap::BaseMapFile();
+/*
   if(hdmap_==nullptr) {
     std::cout<<"Failed to load map file:" << apollo::hdmap::BaseMapFile()<<std::endl;
   }
+*/
   return apollo::common::Status::OK();
 }
 
 apollo::common::Status Routing::Start() {
   if (!navigator_ptr_->IsReady()) {
-    //AERROR << "Navigator is not ready!";
-    std::cout<<"AERROR "<< "Navigator is not ready!"<<std::endl;
+    AERROR << "Navigator is not ready!";
+    //std::cout<<"AERROR "<< "Navigator is not ready!"<<std::endl;
     return apollo::common::Status(ErrorCode::ROUTING_ERROR,
                                   "Navigator not ready");
   }
-  //AINFO << "Routing service is ready.";
-  std::cout << "Routing service is ready." <<std::endl;
+  AINFO << "Routing service is ready.";
+  //std::cout << "Routing service is ready." <<std::endl;
 
   //monitor_logger_buffer_.INFO("Routing started");
   return apollo::common::Status::OK();
@@ -108,12 +112,13 @@ std::vector<RoutingRequest> Routing::FillLaneInfoIfMissing(
       }
     }
     if (lanes.empty()) {
-/*
+
       AERROR << "Failed to find nearest lane from map at position: "
              << point.DebugString();
-*/
+      /*
       std::cout<<"AERROR "<< "Failed to find nearest lane from map at position: "
              << point.DebugString()<<std::endl;
+      */
       return fixed_requests;  // return empty vector
     }
     for (size_t j = 0; j < lanes.size(); ++j) {
@@ -152,10 +157,11 @@ std::vector<RoutingRequest> Routing::FillLaneInfoIfMissing(
   }
 
   for (const auto& fixed_request : fixed_requests) {
-    //ADEBUG << "Fixed routing request:" << fixed_request.DebugString();
+    ADEBUG << "Fixed routing request:" << fixed_request.DebugString();
+    /*
     std::cout<<"ADEBUG "<< "Fixed routing request:" 
             << fixed_request.DebugString()<<std::endl;
-
+    */
   }
   return fixed_requests;
 }
@@ -196,8 +202,8 @@ bool Routing::FillParkingID(RoutingResponse* routing_response) {
       return true;
     }
   }
-  //ADEBUG << "Failed to fill parking ID";
-  std::cout<<"ADEBUG "<< "Failed to fill parking ID"<<std::endl;
+  ADEBUG << "Failed to fill parking ID";
+  //std::cout<<"ADEBUG "<< "Failed to fill parking ID"<<std::endl;
 
   return false;
 }
@@ -213,8 +219,8 @@ bool Routing::Process(const std::shared_ptr<RoutingRequest>& routing_request,
                       RoutingResponse* const routing_response) {
   //CHECK_NOTNULL(routing_response);
 
-  //AINFO << "Get new routing request:" << routing_request->DebugString();
-  std::cout << "Get new routing request:" << routing_request->DebugString()<<std::endl;
+  AINFO << "Get new routing request:" << routing_request->DebugString();
+  //std::cout << "Get new routing request:" << routing_request->DebugString()<<std::endl;
 
   //找到routing_request节点最近的路
   //从地图中选择最佳的匹配点
@@ -238,8 +244,8 @@ bool Routing::Process(const std::shared_ptr<RoutingRequest>& routing_request,
     //monitor_logger_buffer_.INFO("Routing success!");
     return true;
   }
-  //AERROR << "Failed to search route with navigator.";
-  std::cout<<"AERROR "<< "Failed to search route with navigator."<<std::endl;
+  AERROR << "Failed to search route with navigator.";
+  //std::cout<<"AERROR "<< "Failed to search route with navigator."<<std::endl;
 
   //monitor_logger_buffer_.WARN("Routing failed! " +
   //                            routing_response->status().msg());
